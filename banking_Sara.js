@@ -59,11 +59,28 @@ console.table(result); // Output the transformed data in a readable format
 
 // Calculates the net total of transactions
 function getNetTransactionTotal(transactions) {
-    return transactions.reduce((total, current) => {
-    return total + current;
-  }, 0); // initial value ensures safe calculation even for empty arrays
+      return transactions.reduce((total, value) => total + value, 0); // initial value ensures safe calculation even for empty arrays
 }
 
 console.log(getNetTransactionTotal([200, -50, -100])); // 50
 console.log(getNetTransactionTotal([500, -120]));      // 380
 console.log(getNetTransactionTotal([]));               // 0
+
+// ==============================
+// Task 4 — Higher-Order Function
+// ==============================
+
+// Accepting a function as an argument demonstrates that functions are first-class values
+function processAccounts(accounts, formatter) {
+  return accounts.map(formatter);
+}
+//Test the higher-order function with the previously defined formatAccount function
+const processedAccounts = processAccounts(accounts, formatAccount);
+console.table(processedAccounts); // Output the processed accounts in a readable format
+
+const names = processAccounts(accounts, (acc) => acc.holder ?? 'UNKNOWN');
+console.log(names);
+
+// ==============================
+// Task 5 — this and bind
+// ==============================
