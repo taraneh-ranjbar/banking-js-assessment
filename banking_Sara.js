@@ -9,7 +9,28 @@ const accounts = [
   { id: 104, holder: 'John Doe', balance: 5000, isActive: true, transactions: [1000, -200, -300, 150] }
 ];
 
-
+const roleCapabilities = {
+  Viewer: {
+    viewAccount(accountId) {
+      return `${this.name} viewed account ${accountId}`;
+    }
+  },
+  Auditor: {
+    viewAuditLogs() {
+      return `${this.name} viewed audit logs`;
+    }
+  },
+  Approver: {
+    approveLoan(loanId) {
+      return `${this.name} approved loan ${loanId}`;
+    }
+  },
+  TransferOperator: {
+    transferFunds(fromId, toId, amount) {
+      return `${this.name} transferred $${amount} from ${fromId} to ${toId}`;
+    }
+  }
+};
 
 // ==============================
 // Task 1 — Pure Function
@@ -117,3 +138,44 @@ console.log(atmFee(500));            // 2.5
 // Currying allows us to fix the rate once and reuse the returned function
 // for multiple amounts, improving reusability and reducing repetition.
 
+// ==============================
+// Task 7 — Composition
+// ==============================
+
+// Base factory for creating employees
+function createEmployee(name) {
+  return { name };
+}
+
+// Assign only the required capabilities to each employee
+const ali = Object.assign(
+  createEmployee('Ali'),
+  roleCapabilities.Viewer,
+  roleCapabilities.Auditor
+);
+
+const sara = Object.assign(
+  createEmployee('Sara'),
+  roleCapabilities.Viewer,
+  roleCapabilities.TransferOperator
+);
+
+const mona = Object.assign(
+  createEmployee('Mona'),
+  roleCapabilities.Approver,
+  roleCapabilities.Auditor,
+  roleCapabilities.Viewer
+);
+
+// Composition avoids complex inheritance and keeps the design flexible
+console.log(ali.viewAccount(101));
+console.log(ali.viewAuditLogs());
+
+console.log(sara.viewAccount(102));
+console.log(sara.transferFunds(101, 102, 500));
+
+console.log(mona.approveLoan('L-99'));
+console.log(mona.viewAuditLogs());
+console.log(mona.viewAccount(104));
+// Composition is more flexible than inheritance because we can combine
+// only the needed capabilities without creating complex class hierarchies.
