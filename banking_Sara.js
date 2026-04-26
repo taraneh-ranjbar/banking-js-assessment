@@ -179,3 +179,34 @@ console.log(mona.viewAuditLogs());
 console.log(mona.viewAccount(104));
 // Composition is more flexible than inheritance because we can combine
 // only the needed capabilities without creating complex class hierarchies.
+
+
+// ==============================
+// Task 8 — Class + Prototype
+// ==============================
+class BankEmployee {
+  constructor(name) {
+    this.name = name;
+  }
+
+  getName() {
+    return this.name;
+  }
+}
+
+// Adding a method to the prototype allows all instances to share it, saving memory
+Object.assign(
+  BankEmployee.prototype,
+  roleCapabilities.Viewer,
+  roleCapabilities.Auditor
+);
+const reviewer = new BankEmployee('Layla');
+
+console.log(reviewer.viewAccount(103));
+// Layla viewed account 103
+
+console.log(reviewer.viewAuditLogs());
+// Layla viewed audit logs
+
+// Assigning methods to the prototype allows all instances to share
+// the same functions in memory, unlike assigning them per object.
