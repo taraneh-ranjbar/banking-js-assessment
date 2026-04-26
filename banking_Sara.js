@@ -59,7 +59,7 @@ console.table(result); // Output the transformed data in a readable format
 
 // Calculates the net total of transactions
 function getNetTransactionTotal(transactions) {
-      return transactions.reduce((total, value) => total + value, 0); // initial value ensures safe calculation even for empty arrays
+  return transactions.reduce((total, value) => total + value, 0); // initial value ensures safe calculation even for empty arrays
 }
 
 console.log(getNetTransactionTotal([200, -50, -100])); // 50
@@ -84,3 +84,36 @@ console.log(names);
 // ==============================
 // Task 5 — this and bind
 // ==============================
+const accountAlert = {
+  bankName: 'Secure Bank',
+  sendAlert() {
+    console.log(this.bankName + ' alert sent');
+  }
+};
+
+// Fix using bind to preserve the correct "this" context
+setTimeout(accountAlert.sendAlert.bind(accountAlert), 1000);
+
+// Alternative fix using an arrow function wrapper
+setTimeout(() => accountAlert.sendAlert(), 1000);
+// The original issue occurs because the method loses its context when passed as a callback
+
+// ==============================
+// Task 6 — Currying
+// ==============================
+function createFeeCalculator(rate) {
+  return function (amount) {
+    return amount * rate;
+  };
+} // Currying allows fixing the rate once and reusing the returned function for multiple amounts
+const wireFee = createFeeCalculator(0.015);
+const internationalFee = createFeeCalculator(0.03);
+const atmFee = createFeeCalculator(0.005);
+console.log(wireFee(1000));        // 15
+console.log(wireFee(2000));        // 30
+
+console.log(internationalFee(1000)); // 30
+console.log(atmFee(500));            // 2.5
+// Currying allows us to fix the rate once and reuse the returned function
+// for multiple amounts, improving reusability and reducing repetition.
+
