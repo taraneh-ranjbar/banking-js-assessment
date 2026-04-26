@@ -33,3 +33,37 @@ console.log(formatAccount(accounts[2]));
 // Why is a pure function important in banking?
 //Because it provides predictable behavior, high testability, and prevents side effects in sensitive financial calculations.
 
+
+// ==============================
+// Task 2 — Functional Refactor
+// ==============================
+
+// Using filter + map makes the intent clearer compared to a loop
+const result = accounts
+  .filter(acc => acc.isActive && (acc.balance ?? 0) > 1000)
+  .map(acc => ({
+    id: acc.id,
+    holder: (acc.holder ?? 'UNKNOWN').toUpperCase(),
+    balanceWithBonus: (acc.balance ?? 0) * 1.02
+  }));
+console.log(accounts); // Original data remains unchanged, demonstrating immutability
+console.table(result); // Output the transformed data in a readable format
+
+// Functional version clearly separates "what to select" (filter)
+// from "how to transform" (map), unlike the loop which mixes both concerns.
+
+
+// ==============================
+// Task 3 — reduce
+// ==============================
+
+// Calculates the net total of transactions
+function getNetTransactionTotal(transactions) {
+    return transactions.reduce((total, current) => {
+    return total + current;
+  }, 0); // initial value ensures safe calculation even for empty arrays
+}
+
+console.log(getNetTransactionTotal([200, -50, -100])); // 50
+console.log(getNetTransactionTotal([500, -120]));      // 380
+console.log(getNetTransactionTotal([]));               // 0
