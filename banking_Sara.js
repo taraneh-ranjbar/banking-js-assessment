@@ -91,7 +91,7 @@ console.log(getNetTransactionTotal([]));               // 0
 // Task 4 — Higher-Order Function
 // ==============================
 
-// Accepting a function as an argument demonstrates that functions are first-class values
+// Because we can pass functions like regular values, JavaScript treats them as first-class citizens.
 function processAccounts(accounts, formatter) {
   return accounts.map(formatter);
 }
@@ -117,7 +117,8 @@ setTimeout(accountAlert.sendAlert.bind(accountAlert), 1000);
 
 // Alternative fix using an arrow function wrapper
 setTimeout(() => accountAlert.sendAlert(), 1000);
-// The original issue occurs because the method loses its context when passed as a callback
+// When passed to setTimeout, the method is called as a plain function,
+// so "this" no longer refers to accountAlert but becomes undefined (or window)
 
 // ==============================
 // Task 6 — Currying
@@ -195,6 +196,8 @@ class BankEmployee {
 }
 
 // Adding a method to the prototype allows all instances to share it, saving memory
+// Instance methods create separate copies per object,
+// while prototype methods are shared across all instances, saving memory
 Object.assign(
   BankEmployee.prototype,
   roleCapabilities.Viewer,
@@ -210,3 +213,51 @@ console.log(reviewer.viewAuditLogs());
 
 // Assigning methods to the prototype allows all instances to share
 // the same functions in memory, unlike assigning them per object.
+
+// ==============================
+// Task 9 — Concept Answers
+// ==============================
+
+/*
+ Q1 — Why is a pure function easier to test in a banking application?
+
+A pure function always produces the same output for the same input and has no side effects. 
+This makes it predictable and easy to test in isolation, which is critical in banking systems where accuracy and reliability are essential.
+
+ Q2 — When would you choose bind instead of calling the method directly?
+
+You use bind when passing a method as a callback and you need to preserve its original this context. Without bind, the method loses its object reference when executed later.
+
+ Q3 — Difference between first-class and higher-order functions?
+
+First-class functions are treated like values — they can be passed, returned, or stored. A higher-order function is a function that takes another function as an argument or returns one.
+
+ Q4 — Difference between currying and bind? When to use each?
+
+Currying transforms a function to take arguments one at a time and is used for reusability by fixing values like configuration (e.g., rate). Bind is used to fix the this context of a function (and optionally preset arguments) when dealing with object methods.
+
+ Q5 — Why prefer composition over inheritance in permission systems?
+
+Composition is more flexible because it allows combining only the required capabilities without creating complex and rigid class hierarchies. It also improves maintainability and avoids duplication.
+*/
+
+
+// ==============================
+// Optional Challenge
+// ==============================
+
+const secureTransfer = {
+  transferIfApproved(amount, approved) {
+    return approved
+      ? `${this.name} securely transferred $${amount}`
+      : 'Transfer denied';
+  }
+};
+
+Object.assign(sara, secureTransfer);
+
+console.log(sara.transferIfApproved(5000, false));
+// Transfer denied
+
+console.log(sara.transferIfApproved(5000, true));
+// Sara securely transferred $5000
